@@ -1,29 +1,30 @@
-name: Autograding Tests
-'on':
-- push
-- repository_dispatch
-permissions:
-  checks: write
-  actions: read
-  contents: read
-jobs:
-  run-autograding-tests:
-    runs-on: ubuntu-latest
-    if: github.actor != 'github-classroom[bot]'
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-    - name: Dummy Test
-      id: dummy-test
-      uses: classroom-resources/autograding-command-grader@v1
-      with:
-        test-name: Dummy Test
-        setup-command: ''
-        command: gradle test
-        timeout: 10
-    - name: Autograding Reporter
-      uses: classroom-resources/autograding-grading-reporter@v1
-      env:
-        DUMMY-TEST_RESULTS: "${{steps.dummy-test.outputs.result}}"
-      with:
-        runners: dummy-test
+public class TaxTableTools {
+    private int[] salaryBounds;
+    private double[] taxRates;
+    private int salary;
+
+    // Setter for salary and tax rate tables
+    public void setTaxTable(int[] salaryBounds, double[] taxRates) {
+        this.salaryBounds = salaryBounds;
+        this.taxRates = taxRates;
+    }
+
+    // Setter for the salary
+    public void setSalary(int salary) {
+        this.salary = salary;
+    }
+
+    // Method to get the tax rate for the current salary
+    public double getTaxRate() {
+        for (int i = 0; i < salaryBounds.length - 1; i++) {
+            if (salary >= salaryBounds[i] && salary < salaryBounds[i + 1]) {
+                return taxRates[i];
+            }
+        }
+        return taxRates[taxRates.length - 1]; // max rate
+    }
+
+    // Method to calculate tax
+    public double calculateTax() {
+        return salary * getTaxRate();
+    }
