@@ -1,30 +1,34 @@
-public class TaxTableTools {
-    private int[] salaryBounds;
-    private double[] taxRates;
-    private int salary;
+import java.util.Scanner;
 
-    // Setter for salary and tax rate tables
-    public void setTaxTable(int[] salaryBounds, double[] taxRates) {
-        this.salaryBounds = salaryBounds;
-        this.taxRates = taxRates;
-    }
+public class IncomeTaxCalculator {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        TaxTableTools taxTool = new TaxTableTools();
 
-    // Setter for the salary
-    public void setSalary(int salary) {
-        this.salary = salary;
-    }
+        // Salary bounds and tax rates (as defined)
+        int[] salaryBounds = {0, 20000, 50000, 100000, Integer.MAX_VALUE};
+        double[] taxRates = {0.0, 0.10, 0.20, 0.30, 0.40};
 
-    // Method to get the tax rate for the current salary
-    public double getTaxRate() {
-        for (int i = 0; i < salaryBounds.length - 1; i++) {
-            if (salary >= salaryBounds[i] && salary < salaryBounds[i + 1]) {
-                return taxRates[i];
+        taxTool.setTaxTable(salaryBounds, taxRates);
+
+        while (true) {
+            System.out.print("Enter annual income (-1 to exit): ");
+            int income = scanner.nextInt();
+
+            if (income == -1) {
+                break;
+            } else if (income < 0) {
+                System.out.println("Invalid input. Please enter a positive number or -1 to exit.");
+                continue;
             }
-        }
-        return taxRates[taxRates.length - 1]; // max rate
-    }
 
-    // Method to calculate tax
-    public double calculateTax() {
-        return salary * getTaxRate();
+            taxTool.setSalary(income);
+            double rate = taxTool.getTaxRate();
+            double tax = taxTool.calculateTax();
+
+            System.out.printf("Annual Income: %d Tax rate: %.2f Tax to pay: %.2f%n", income, rate, tax);
+        }
+
+        scanner.close();
     }
+}
